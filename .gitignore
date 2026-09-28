@@ -1,0 +1,9 @@
+# Personal workout data never goes into git (the repo may be public for GitHub Pages).
+backups/
+source/data-export/
+*.local.json
+.DS_Store
+# Local Claude Code preview config (contains this Mac's folder path)
+.claude/
+# Private Claude notes (health-source locations, exclusions)
+CLAUDE.local.md
