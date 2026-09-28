@@ -1,13 +1,15 @@
 /* Sixty Strong — service worker: makes the app open and work with no signal.
    Bump CACHE whenever any app file changes so phones pick up the new version
    (the app shows an "Update ready" banner). */
-const CACHE = "sixty-strong-v1.2.4";
+const CACHE = "sixty-strong-v1.2.5";
 const SHELL = ["./", "index.html", "styles.css", "program.js", "core.js", "store.js", "health.js", "app.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const FONTS = "sixty-strong-fonts";
 
 self.addEventListener("install", e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)));
+  // cache:"reload" skips the browser's HTTP cache (GitHub Pages sends max-age=600), so a new
+  // version never gets stored with stale copies of the previous version's files.
+  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL.map(u=>new Request(u, {cache:"reload"})))));
 });
 self.addEventListener("activate", e=>{
   e.waitUntil(caches.keys().then(keys=>Promise.all(

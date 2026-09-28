@@ -5,7 +5,7 @@
 (function(){
 "use strict";
 const PG = window.SS_PROGRAM, C = window.SSCore, S = window.SSStore, H = window.SSHealth;
-const APP_VERSION = "1.2.4";
+const APP_VERSION = "1.2.5";
 const SEED_URL = "../backups/sixty-strong-import.json";   // only exists on the Mac copy, never online
 
 let history = [], gym = "office", day = "A";
@@ -560,7 +560,7 @@ async function firstRunImport(){
 
 function registerSW(){
   if (!("serviceWorker" in navigator)) return;
-  navigator.serviceWorker.register("sw.js").then(reg=>{
+  navigator.serviceWorker.register("sw.js", {updateViaCache:"none"}).then(reg=>{
     swReg = reg;
     const watch = w=>w && w.addEventListener("statechange", ()=>{
       if (w.state === "installed" && navigator.serviceWorker.controller){ updateReady = true; renderBanners(); }
