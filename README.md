@@ -61,4 +61,4 @@ Then open http://127.0.0.1:8766/app/ (the tests are at http://127.0.0.1:8766/tes
 - The app loads and works with the server stopped (offline via the service worker).
 - Logging, deleting and restoring a session work. Restoring the same backup twice adds nothing. A corrupt file gives a clear error.
 - No horizontal scrolling at 375 px. Checked in both light and dark mode. No console errors.
-- **Not yet tested on a real iPhone.** Share-sheet saving and the home-screen install can only be checked on the device.
+- **On Darryl's iPhone (2026-09-28):** installed from Safari to the Home Screen, and Restore from `sixty-strong-import.json` worked. Saving a backup through the share sheet hasn't been confirmed yet.
