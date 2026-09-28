@@ -1,7 +1,7 @@
 /* Sixty Strong — service worker: makes the app open and work with no signal.
    Bump CACHE whenever any app file changes so phones pick up the new version
    (the app shows an "Update ready" banner). */
-const CACHE = "sixty-strong-v1.2.3";
+const CACHE = "sixty-strong-v1.2.4";
 const SHELL = ["./", "index.html", "styles.css", "program.js", "core.js", "store.js", "health.js", "app.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const FONTS = "sixty-strong-fonts";

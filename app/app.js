@@ -5,7 +5,7 @@
 (function(){
 "use strict";
 const PG = window.SS_PROGRAM, C = window.SSCore, S = window.SSStore, H = window.SSHealth;
-const APP_VERSION = "1.2.3";
+const APP_VERSION = "1.2.4";
 const SEED_URL = "../backups/sixty-strong-import.json";   // only exists on the Mac copy, never online
 
 let history = [], gym = "office", day = "A";
@@ -547,7 +547,8 @@ async function firstRunImport(){
   let list = [], parsed = null;
   const legacy = needW ? S.legacyLocal() : [];
   if (Array.isArray(legacy) && legacy.length) list = list.concat(C.parseBackup(JSON.stringify(legacy)).workouts);
-  try {
+  const local = /^(127\.0\.0\.1|localhost|\[::1\])$/.test(location.hostname);   // the import file only exists on the Mac copy
+  if (local) try {
     const r = await fetch(SEED_URL, {cache:"no-store"});
     if (r.ok){ parsed = C.parseBackup(await r.text()); if (needW) list = list.concat(parsed.workouts); }
   } catch(e){}
