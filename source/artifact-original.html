@@ -1,0 +1,736 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sixty Strong</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#E7EAEE;
+  --surface:#FFFFFF;
+  --surface-2:#F0F2F5;
+  --ink:#161A20;
+  --ink-2:#4B5663;
+  --muted:#77828F;
+  --line:#CBD2DA;
+  --line-soft:#DDE2E8;
+  --accent:#D9581B;
+  --accent-ink:#FFFFFF;
+  --accent-soft:rgba(217,88,27,.10);
+  --steel:#3C6B8C;
+  --steel-soft:rgba(60,107,140,.12);
+  --up:#2C7F55;
+  --shadow:0 1px 2px rgba(22,26,32,.06),0 8px 24px -16px rgba(22,26,32,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#11151A;
+    --surface:#191E25;
+    --surface-2:#212832;
+    --ink:#E8ECF1;
+    --ink-2:#AEB8C4;
+    --muted:#7C8794;
+    --line:#2D353F;
+    --line-soft:#242B34;
+    --accent:#F0762F;
+    --accent-ink:#1A1005;
+    --accent-soft:rgba(240,118,47,.14);
+    --steel:#6FA6C9;
+    --steel-soft:rgba(111,166,201,.16);
+    --up:#4FB183;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#11151A;
+  --surface:#191E25;
+  --surface-2:#212832;
+  --ink:#E8ECF1;
+  --ink-2:#AEB8C4;
+  --muted:#7C8794;
+  --line:#2D353F;
+  --line-soft:#242B34;
+  --accent:#F0762F;
+  --accent-ink:#1A1005;
+  --accent-soft:rgba(240,118,47,.14);
+  --steel:#6FA6C9;
+  --steel-soft:rgba(111,166,201,.16);
+  --up:#4FB183;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -18px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:0 132px}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Barlow Narrow",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.03em;text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ── masthead ─────────────────────────────── */
+.mast{padding-block:20px 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.mast-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mast h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.06em}
+.mast .tag{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.mast .date{font-size:12px;color:var(--muted);letter-spacing:.08em}
+
+/* ── tabs ─────────────────────────────────── */
+.tabs{display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:8px;padding:3px;margin-bottom:20px}
+.tabs button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:6px;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+/* ── session controls ─────────────────────── */
+.ctl{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.ctl-group{display:flex;flex-direction:column;gap:6px}
+.ctl-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;transition:border-color .12s,background .12s}
+.seg button .k{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.seg button .s{font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.seg button[aria-pressed="true"] .k{color:var(--accent)}
+.nextpill{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.nextpill b{color:var(--accent)}
+
+/* ── exercise block ───────────────────────── */
+.ex{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:14px 14px 12px;margin-bottom:10px}
+.ex.done{border-color:var(--up)}
+.ex-head{display:flex;gap:10px;align-items:flex-start}
+.ex-num{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-top:3px;min-width:20px;font-variant-numeric:tabular-nums}
+.ex-name{flex:1;min-width:0}
+.ex-name .n{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;line-height:1.15}
+.ex-name .cue{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}
+.ex-target{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--steel);background:var(--steel-soft);padding:3px 7px;border-radius:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ex-last{margin:9px 0 0;padding:7px 9px;background:var(--surface-2);border-radius:6px;font-size:12px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.ex-last .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.ex-last .vals{font-family:"IBM Plex Mono",monospace;font-size:12px;font-variant-numeric:tabular-nums}
+.cue-up{display:inline-flex;align-items:center;gap:4px;background:var(--accent);color:var(--accent-ink);font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:11px;letter-spacing:.09em;text-transform:uppercase;padding:3px 7px;border-radius:5px}
+.howbtn{margin-top:8px;border:1px solid var(--line);background:transparent;border-radius:6px;padding:5px 9px;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
+.howbtn[aria-expanded="true"]{border-color:var(--steel);color:var(--steel)}
+.howbtn .cv{transition:transform .15s}
+.howbtn[aria-expanded="true"] .cv{transform:rotate(180deg)}
+.how{margin-top:9px;border-left:2px solid var(--steel);padding:2px 0 2px 11px;display:flex;flex-direction:column;gap:7px}
+.how p{margin:0;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.how p b{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-size:11px;color:var(--muted);display:block;margin-bottom:1px}
+.how p.miss b{color:var(--accent)}
+.how a{display:inline-flex;align-items:center;gap:5px;color:var(--steel);font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:12px;letter-spacing:.09em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--steel-soft);align-self:flex-start;padding-bottom:1px}
+.sets{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+.setrow{display:grid;grid-template-columns:22px 1fr 1fr 40px;gap:7px;align-items:center}
+.setrow .sn{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);text-align:center}
+.fld{position:relative;display:flex;align-items:center}
+.fld input{width:100%;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:7px;padding:10px 30px 10px 10px;font-family:"IBM Plex Mono",monospace;font-size:16px;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.fld input::-webkit-outer-spin-button,.fld input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.fld input:focus{border-color:var(--accent);background:var(--surface)}
+.fld .u{position:absolute;right:9px;font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;pointer-events:none;font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.tick{border:1px solid var(--line);background:var(--surface-2);border-radius:7px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.12s}
+.tick[aria-pressed="true"]{background:var(--up);border-color:var(--up);color:#fff}
+.tick svg{width:16px;height:16px}
+
+/* ── notes + finish ───────────────────────── */
+.notes{width:100%;background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:12px;font-family:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:62px;margin-top:4px}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--ground);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:11px 16px calc(11px + env(safe-area-inset-bottom));z-index:20}
+.dock-in{max-width:600px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.dock .stat{flex:1;min-width:0}
+.dock .stat .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.dock .stat .v{font-family:"IBM Plex Mono",monospace;font-size:15px;font-variant-numeric:tabular-nums}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:13px 20px;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink-2);padding:11px 14px;font-size:13px}
+
+/* ── progress ─────────────────────────────── */
+.panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:16px;margin-bottom:12px}
+.panel h2{font-size:13px;letter-spacing:.14em;margin:0 0 14px;color:var(--muted);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.kpi{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:13px 12px}
+.kpi .k{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:"Barlow Condensed",sans-serif;font-weight:600}
+.kpi .v{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:28px;line-height:1.1;margin-top:3px;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:11px;color:var(--muted)}
+.weeks{display:flex;gap:4px;align-items:flex-end;height:54px}
+.weeks div{flex:1;border-radius:3px 3px 0 0;background:var(--line-soft);position:relative}
+.weeks div.h1{background:var(--steel-soft)}
+.weeks div.h2{background:var(--steel);opacity:.6}
+.weeks div.h3{background:var(--accent)}
+.weeks-ax{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.06em}
+.lift{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid var(--line-soft)}
+.lift:first-of-type{border-top:0}
+.lift .nm{flex:1;min-width:0;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14.5px;letter-spacing:.03em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lift .spark{width:74px;height:26px;flex:none}
+.lift .num{font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;min-width:74px}
+.lift .num small{display:block;font-size:10px;color:var(--muted);letter-spacing:.02em}
+.delta{font-family:"IBM Plex Mono",monospace;font-size:11px;min-width:44px;text-align:right}
+.delta.pos{color:var(--up)}
+.delta.flat{color:var(--muted)}
+.empty{text-align:center;padding:26px 14px;color:var(--muted);font-size:13.5px}
+.empty strong{display:block;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:16px;color:var(--ink-2);margin-bottom:5px}
+.log-row{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);font-size:13px}
+.log-row .d{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);min-width:52px}
+.log-row .b{flex:1;min-width:0}
+.log-row .b b{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:14px}
+.log-row .b span{color:var(--muted);font-size:12px}
+.log-row .v{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-2)}
+
+/* ── plan tab ─────────────────────────────── */
+.rule{font-size:13.5px;color:var(--ink-2);padding:10px 0;border-top:1px solid var(--line-soft);display:flex;gap:11px}
+.rule:first-of-type{border-top:0}
+.rule .rk{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);min-width:88px;font-size:13px;padding-top:1px}
+.rule .rv{flex:1}
+.planday{margin-bottom:12px}
+.planday .ph{display:flex;align-items:baseline;gap:9px;margin-bottom:8px}
+.planday .ph .a{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:.1em;color:var(--accent)}
+.planday .ph .b{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+.planrow{display:flex;gap:10px;font-size:13px;padding:6px 0;border-top:1px solid var(--line-soft)}
+.planrow .x{flex:1}
+.planrow .y{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:var(--ink);color:var(--ground);padding:10px 18px;border-radius:8px;font-family:"Barlow Condensed",sans-serif;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px;z-index:40;box-shadow:var(--shadow)}
+.sync{font-size:11px;color:var(--muted);text-align:center;padding:10px 0 0;letter-spacing:.04em}
+@media (prefers-reduced-motion:no-preference){.toast{animation:pop .22s ease-out}}
+@keyframes pop{from{opacity:0;transform:translate(-50%,8px)}}
+@media (max-width:380px){.kpis{grid-template-columns:repeat(2,1fr)}.lift .spark{display:none}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="mast-row">
+      <h1>Sixty Strong</h1>
+      <span class="tag">3&#8209;day rotation &middot; block 1</span>
+    </div>
+    <div class="mast-row" style="margin-top:4px">
+      <span class="date mono" id="today-date"></span>
+      <span class="nextpill" id="next-pill"></span>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-today" aria-selected="true" aria-controls="v-today">Session</button>
+    <button role="tab" id="tab-prog" aria-selected="false" aria-controls="v-prog">Progress</button>
+    <button role="tab" id="tab-plan" aria-selected="false" aria-controls="v-plan">The Plan</button>
+  </div>
+
+  <section id="v-today" role="tabpanel" aria-labelledby="tab-today">
+    <div class="ctl">
+      <div class="ctl-group">
+        <span class="ctl-label">Where</span>
+        <div class="seg" id="seg-gym"></div>
+      </div>
+      <div class="ctl-group">
+        <span class="ctl-label">Session</span>
+        <div class="seg" id="seg-day"></div>
+      </div>
+    </div>
+    <div id="ex-list"></div>
+    <textarea class="notes" id="notes" placeholder="Notes — how it felt, what to change next time"></textarea>
+    <div class="sync" id="sync-note"></div>
+  </section>
+
+  <section id="v-prog" role="tabpanel" aria-labelledby="tab-prog" hidden></section>
+  <section id="v-plan" role="tabpanel" aria-labelledby="tab-plan" hidden></section>
+</div>
+
+<div class="dock" id="dock">
+  <div class="dock-in">
+    <div class="stat">
+      <div class="k">Volume this session</div>
+      <div class="v" id="dock-vol">0 lb</div>
+    </div>
+    <button class="btn ghost" id="btn-csv" hidden>CSV</button>
+    <button class="btn" id="btn-finish" disabled>Log session</button>
+  </div>
+</div>
+
+<script>
+/* ═══ PROGRAM ════════════════════════════════════════════════
+   Three sessions in rotation. Each exists in two versions —
+   the shop gym (free weights) and Planet Fitness (machines).
+   Movement patterns are matched across both so progress on a
+   lift carries whichever room you end up in.
+   inc = how much to add when you clear the top of the range.  */
+const P = {
+  A: { name:"Full Body · Press", focus:"Squat, bench, vertical pull",
+    office:[
+      {n:"Barbell Back Squat", s:3,lo:8, hi:10,inc:10,cue:"Safeties one notch below your bottom. Two ramp sets, then work"},
+      {n:"Barbell Bench Press",s:4,lo:6, hi:8, inc:5, cue:"Two ramp sets first. Elbows ~45°, full lockout"},
+      {n:"Pull-Up",            s:3,lo:5, hi:8, inc:5, cue:"Band or slow negatives until 8 clean reps", bw:true},
+      {n:"DB Romanian Deadlift",s:3,lo:10,hi:12,inc:5,cue:"Push the hips back, bar path close to the legs"},
+      {n:"DB Lateral Raise",   s:3,lo:12,hi:15,inc:2.5,cue:"Light. Lead with the elbow, stop at shoulder height"},
+      {n:"Dip",                s:2,lo:8, hi:12,inc:5, cue:"Bench dips if the full dip is rough on the shoulder", bw:true},
+      {n:"Plank",              s:3,lo:30,hi:45,inc:0, cue:"Ribs down, glutes on", time:true}
+    ],
+    pf:[
+      {n:"Leg Press",          s:3,lo:10,hi:12,inc:10,cue:"Feet mid-platform, stop just short of the back rounding"},
+      {n:"Chest Press Machine",s:4,lo:6, hi:8, inc:5, cue:"Seat so the handles sit at mid-chest"},
+      {n:"Lat Pulldown",       s:3,lo:8, hi:10,inc:5, cue:"Chest up, pull to the collarbone, no body swing"},
+      {n:"Seated Leg Curl",    s:3,lo:10,hi:12,inc:5, cue:"Slow on the way back — that's where hamstrings grow"},
+      {n:"Cable Lateral Raise",s:3,lo:12,hi:15,inc:2.5,cue:"One arm at a time, cable behind the body"},
+      {n:"Triceps Pushdown",   s:2,lo:10,hi:12,inc:5, cue:"Elbows pinned to the ribs"},
+      {n:"Ab Machine",         s:3,lo:12,hi:15,inc:5, cue:"Crunch through the ribs, not the hip flexors"}
+    ]},
+  B: { name:"Upper Body", focus:"Press, row, arms",
+    office:[
+      {n:"Barbell Bench Press",s:4,lo:6, hi:8, inc:5, cue:"Same bar as Session A — this is the lift to chase"},
+      {n:"Barbell Bent-Over Row",s:4,lo:8,hi:10,inc:5,cue:"Torso ~45°, pull to the belly button, no jerking"},
+      {n:"Standing DB Overhead Press",s:3,lo:8,hi:10,inc:5,cue:"Squeeze the glutes, don't lean back"},
+      {n:"Chin-Up",            s:3,lo:5, hi:8, inc:5, cue:"Underhand, band assist as needed", bw:true},
+      {n:"DB Incline Curl",    s:3,lo:10,hi:12,inc:2.5,cue:"Bench at 45°, full stretch at the bottom"},
+      {n:"DB Overhead Triceps Extension",s:3,lo:10,hi:12,inc:5,cue:"One DB, both hands, elbows tight"},
+      {n:"DB Rear-Delt Fly",   s:3,lo:12,hi:15,inc:2.5,cue:"Chest on the incline bench, light and strict"}
+    ],
+    pf:[
+      {n:"Smith Incline Press",s:4,lo:6, hi:8, inc:5, cue:"Bench at 30°, bar to the upper chest"},
+      {n:"Seated Cable Row",   s:4,lo:8, hi:10,inc:5, cue:"Neutral grip, shoulder blades back and down"},
+      {n:"Shoulder Press Machine",s:3,lo:8,hi:10,inc:5,cue:"Handles at ear height at the bottom"},
+      {n:"Close-Grip Lat Pulldown",s:3,lo:8,hi:10,inc:5,cue:"V-handle, lean back only slightly"},
+      {n:"Cable Curl",         s:3,lo:10,hi:12,inc:5, cue:"Straight bar, elbows still"},
+      {n:"Rope Pushdown",      s:3,lo:10,hi:12,inc:5, cue:"Spread the rope at the bottom"},
+      {n:"Face Pull",          s:3,lo:12,hi:15,inc:5, cue:"Rope at eye height — this one keeps shoulders healthy"}
+    ]},
+  C: { name:"Full Body · Pull", focus:"Hinge, single leg, back",
+    office:[
+      {n:"Barbell Romanian Deadlift",s:4,lo:6,hi:8,inc:10,cue:"Hips back, flat back, stop at mid-shin"},
+      {n:"DB Split Squat",     s:3,lo:8, hi:10,inc:5, cue:"Per leg. Back foot on the bench if balance allows"},
+      {n:"Incline DB Press",   s:3,lo:8, hi:10,inc:5, cue:"Bench at 30°, DBs stacked over the elbows"},
+      {n:"One-Arm DB Row",     s:3,lo:10,hi:12,inc:5, cue:"Per side. Hand on the bench, drive the elbow back"},
+      {n:"DB Hammer Curl",     s:3,lo:10,hi:12,inc:2.5,cue:"Neutral grip — easier on the elbows"},
+      {n:"Standing Calf Raise",s:3,lo:15,hi:20,inc:10,cue:"Full stretch at the bottom, pause at the top"},
+      {n:"Side Plank",         s:3,lo:25,hi:40,inc:0, cue:"Per side", time:true}
+    ],
+    pf:[
+      {n:"Smith Romanian Deadlift",s:4,lo:8,hi:10,inc:10,cue:"Bar close to the legs the whole way down"},
+      {n:"Leg Press (feet high)",s:3,lo:10,hi:12,inc:10,cue:"High foot placement loads glutes and hamstrings"},
+      {n:"Chest-Supported Row",s:4,lo:10,hi:12,inc:5, cue:"Pad takes the low back out of it entirely"},
+      {n:"Pec Deck",           s:3,lo:12,hi:15,inc:5, cue:"Stop when the hands reach the chest line"},
+      {n:"Leg Extension",      s:3,lo:12,hi:15,inc:5, cue:"Squeeze one second at the top"},
+      {n:"Seated Calf Raise",  s:3,lo:15,hi:20,inc:10,cue:"Slow down, full range"},
+      {n:"Cable Woodchop",     s:3,lo:12,hi:12,inc:5, cue:"Per side. High to low, rotate through the ribs"}
+    ]}
+};
+const DAYS=["A","B","C"];
+const GYMS={office:{k:"Shop Gym",s:"Barbell · DBs · bar"},pf:{k:"Planet Fitness",s:"Machines · cables"}};
+
+/* ═══ FORM NOTES ═════════════════════════════════════════════
+   s = how to set up · d = how to do it · m = what goes wrong  */
+const FORM={
+"Barbell Back Squat":{s:"Bar across the upper traps, hands just outside the shoulders. Feet shoulder-width, toes turned out maybe 20°. Safeties one notch below your bottom position.",d:"Big breath, brace the midsection. Break at the hips and knees together, down until the thighs are at or just below parallel, drive back up through the middle of the foot.",m:"Knees caving inward, or the heels lifting. Both usually mean the stance is too narrow — widen it before you blame ankle mobility."},
+"Barbell Bench Press":{s:"Eyes under the bar. Pinch the shoulder blades back and down into the bench and keep them there. Feet flat, slight natural arch in the low back.",d:"Lower to the lower chest with the elbows about 45° from the torso, touch lightly, press back up over the shoulders.",m:"Flaring the elbows out to 90°. That is the single most common way people wreck a shoulder on this lift."},
+"Pull-Up":{s:"Overhand grip just outside shoulder width. Hang with the shoulders pulled down away from the ears before you pull.",d:"Lead with the chest, drive the elbows down toward the ribs, chin over the bar, lower under control.",m:"Shrugging up into the ears. Set the shoulder blades down first — the arms finish the job, they don't start it."},
+"Chin-Up":{s:"Underhand grip, about shoulder width.",d:"Pull the chest toward the bar, elbows driving down and back. Full hang at the bottom of every rep.",m:"Half reps. A short chin-up is a worse exercise than an assisted full one."},
+"DB Romanian Deadlift":{s:"Dumbbells in front of the thighs, knees softly bent — and they stay at that same bend the whole set. Chest up.",d:"Push the hips straight back, dumbbells sliding down the legs, until you feel a real stretch in the hamstrings — usually mid-shin. Drive the hips forward to stand.",m:"Bending the knees more to reach lower, or rounding the low back. Your hamstring flexibility sets the depth, not the floor."},
+"Barbell Romanian Deadlift":{s:"Take the bar out of the rack at hip height rather than lifting it off the floor. Shoulder-width grip, knees soft.",d:"Hips back, bar dragging against the thighs the whole way, stop at mid-shin, drive the hips forward.",m:"Letting the bar drift away from the legs. Every inch forward multiplies the load on your low back."},
+"DB Lateral Raise":{s:"Dumbbells at the sides, slight forward lean, small fixed bend in the elbows.",d:"Raise out to the sides to shoulder height, leading with the elbow, then lower slowly.",m:"Going too heavy and swinging. For almost everyone this is a 10–25 lb exercise. If you're heaving it, it isn't working."},
+"Dip":{s:"Hands on the bars, arms locked out, chest leaned slightly forward.",d:"Lower until the upper arms are roughly parallel to the floor, then press back up.",m:"Dropping too deep. Depth past parallel puts a lot of stress on the front of the shoulder for no extra benefit."},
+"Plank":{s:"Forearms directly under the shoulders, feet hip-width.",d:"Squeeze the glutes, tuck the ribs down toward the hips, hold a straight line from ear to ankle. Breathe normally.",m:"Hips sagging toward the floor, or piked up in the air. If either starts, the set is over — add time next session instead."},
+"Side Plank":{s:"Forearm under the shoulder, feet stacked or staggered.",d:"Drive the hips up, straight line head to heels, ribs tucked.",m:"Hips drifting forward or sagging down. Both let you hold it longer without training anything."},
+"Barbell Bent-Over Row":{s:"Hinge to about 45°, flat back, bar hanging at arm's length, grip just outside the knees.",d:"Pull the bar to the belly button, elbows back past the ribs, brief pause, lower under control.",m:"Standing up as the set gets hard. If the torso angle changes, the set's done — the low back is now doing the work."},
+"Standing DB Overhead Press":{s:"Dumbbells at shoulder height, palms forward. Glutes and abs tight before the first rep.",d:"Press overhead until the arms lock, upper arms finishing near the ears. Lower under control to shoulder height.",m:"Leaning back to get the weight up. That turns it into a standing incline press and loads the low back."},
+"DB Incline Curl":{s:"Bench at 45°, sit back, let the arms hang straight down behind the line of the body.",d:"Curl without moving the elbows, squeeze at the top, lower slowly to a full stretch.",m:"Letting the elbows drift forward. The stretched starting position is the entire reason for this variation."},
+"DB Overhead Triceps Extension":{s:"One dumbbell held with both hands, arms locked overhead, elbows close to the head.",d:"Lower behind the head with the elbows staying put, then extend back up.",m:"Elbows flaring out wide, which hands the work to the shoulders."},
+"DB Rear-Delt Fly":{s:"Chest on an incline bench set to 30–45°, dumbbells hanging straight down.",d:"Raise out to the sides with a slight elbow bend, light squeeze of the shoulder blades at the top.",m:"Shrugging and using the traps. Keep it light — this one is about position, not load."},
+"DB Split Squat":{s:"One foot forward, the other 2–3 feet back, or up on a bench. Dumbbells at the sides.",d:"Drop straight down until the back knee is just off the floor, then drive up through the front heel.",m:"Leaning forward and pushing off the back foot. The back leg is for balance, the front leg does the work."},
+"Incline DB Press":{s:"Bench at 30°. Dumbbells at the outside of the shoulders, wrists stacked over the elbows.",d:"Press up and slightly inward, lower under control to a stretch at chest level.",m:"Setting the bench too steep. Past 45° it becomes a shoulder press and the upper chest stops working."},
+"One-Arm DB Row":{s:"Opposite hand and knee on the bench, back flat and roughly parallel to the floor.",d:"Pull the dumbbell to the hip with the elbow tight to the body, lower to a full stretch.",m:"Twisting the torso to get the last reps. Drop the weight and keep the shoulders square."},
+"DB Hammer Curl":{s:"Dumbbells at the sides, palms facing each other.",d:"Curl without rotating the wrists, elbows pinned to the ribs.",m:"Swinging the body. If the hips are moving, it's too heavy."},
+"Standing Calf Raise":{s:"Balls of the feet on a step or a plate, heels hanging free.",d:"Drop the heels for a full stretch, pause a beat, rise all the way up, pause again.",m:"Bouncing. The pause at both ends is the exercise — without it you're just using the Achilles like a spring."},
+"Leg Press":{s:"Back and hips flat against the pad. Feet mid-platform, shoulder-width.",d:"Lower until the knees are around 90°, press back up without slamming the knees into lockout.",m:"Going so deep the tailbone rolls off the pad. That is how people hurt their low back on a machine."},
+"Leg Press (feet high)":{s:"Same setup, feet placed high on the platform. Back and hips flat.",d:"Lower to about 90° at the knee, drive through the heels. The high placement shifts the work to glutes and hamstrings.",m:"Same tailbone lift. Stop the descent the instant the hips want to curl under."},
+"Chest Press Machine":{s:"Set the seat so the handles sit at mid-chest height. Shoulder blades back against the pad.",d:"Press out, stop just short of locking the elbows, return to a light stretch.",m:"Seat set too low, which raises the handles and turns it into a shoulder press."},
+"Lat Pulldown":{s:"Thigh pad snug so you don't lift off. Grip slightly wider than the shoulders.",d:"Chest up, pull the bar to the collarbone with the elbows driving down, control it back to a full stretch.",m:"Leaning way back and heaving. A slight lean is fine; a rowing motion means the weight is too heavy."},
+"Close-Grip Lat Pulldown":{s:"V-handle, sit tall, thigh pad snug.",d:"Pull to the upper chest, elbows down and back, full stretch at the top.",m:"Same as the wide pulldown — no heaving with the torso."},
+"Seated Leg Curl":{s:"Line your knee joint up with the machine's pivot point. Pad across the lower shins.",d:"Curl as far as the machine goes, then take two to three seconds to return.",m:"Rushing the return. The lowering half is where hamstrings actually grow."},
+"Cable Lateral Raise":{s:"Cable at the lowest setting. Stand side-on to the stack, handle in the far hand, cable crossing in front of the body.",d:"Raise out and up to shoulder height, lower slowly against the cable's pull.",m:"Shrugging the shoulder up. Keep the neck long and the trap quiet."},
+"Triceps Pushdown":{s:"Elbows pinned to the ribs, slight forward lean, feet staggered.",d:"Extend down to lockout, squeeze, return only to about 90° at the elbow.",m:"Elbows travelling forward and back, which brings the shoulders and chest into it."},
+"Rope Pushdown":{s:"Rope at the high pulley, elbows tight to the sides.",d:"Push down and spread the two ends of the rope apart at the bottom.",m:"Leaning over the stack and using bodyweight to drive it down."},
+"Ab Machine":{s:"Adjust so the pads sit comfortably on the chest or shoulders.",d:"Crunch by shortening the distance between the ribs and the hips, then return slowly.",m:"Pulling with the arms instead of the abs."},
+"Smith Incline Press":{s:"Bench at 30°, positioned so the fixed bar path lines up over your upper chest.",d:"Unrack, lower to the upper chest, press back to just short of lockout.",m:"Bench placed wrong so the bar tracks toward the throat or the belly. Move the bench, don't twist your body to fit it."},
+"Smith Romanian Deadlift":{s:"Bar at hip height, feet directly under the bar, knees soft.",d:"Hips back, bar tracking close against the legs, stop at mid-shin, drive the hips forward.",m:"Feet set too far forward. The bar path is fixed, so if your feet are wrong the low back pays for it every rep."},
+"Seated Cable Row":{s:"Feet on the platform, knees slightly bent, sit tall.",d:"Pull the handle to the belly, shoulder blades back and down, return to a full stretch without letting the low back round.",m:"Rocking the torso back and forth. Keep the chest still and let the arms and back move."},
+"Chest-Supported Row":{s:"Chest on the pad, adjust the seat so you can reach the handles at full stretch.",d:"Row to the ribs, squeeze, let the arms extend fully at the bottom.",m:"Pulling the chest off the pad. The pad taking the low back out of it is the whole reason to use this machine."},
+"Shoulder Press Machine":{s:"Set the seat so the handles start at roughly ear height.",d:"Press overhead, stop just short of lockout, lower under control.",m:"Starting too low, which grinds the shoulder joint at the bottom of every rep."},
+"Cable Curl":{s:"Straight bar on the low pulley, elbows at the sides, stand a step back for constant tension.",d:"Curl up, squeeze, lower slowly.",m:"Elbows drifting forward, which lets the front delts take over."},
+"Face Pull":{s:"Rope at eye height. Step back until there's tension at arm's length. Thumbs pointing back.",d:"Pull toward the face with the hands separating and the elbows staying high.",m:"Pulling to the chest instead of the face. This exercise exists for shoulder health — do it right or skip it."},
+"Pec Deck":{s:"Seat so the handles sit at chest height, slight fixed bend in the elbows.",d:"Bring the hands together, squeeze, open slowly to a stretch.",m:"Letting the arms travel too far back at the stretch. Stop where the chest is loaded, not where the shoulder complains."},
+"Leg Extension":{s:"Knee at the machine's pivot, pad across the lower shins.",d:"Extend to straight, pause one second at the top, lower slowly.",m:"Kicking up with momentum and letting the stack slam down."},
+"Seated Calf Raise":{s:"Balls of the feet on the platform, pad across the lower thighs.",d:"Full stretch down, full rise up, pause at both ends.",m:"Bouncing through the range."},
+"Cable Woodchop":{s:"Cable set high. Stand side-on, feet planted shoulder-width.",d:"Pull down and across the body, rotating through the ribs while the hips stay relatively still.",m:"Turning the feet and hips, which makes it an arm exercise instead of a core one."}
+};
+function watchUrl(n){return"https://www.youtube.com/results?search_query="+encodeURIComponent(n.replace(/\s*\(.*\)/,"")+" proper form technique")}
+
+const PRINCIPLES=[
+  ["Warm up","5 minutes easy cardio, then two ramp sets on the first lift only — about 50% and 75% of your working weight. Cold joints at 60 is where injuries come from, not heavy weight."],
+  ["How hard","Stop every working set with 1–2 reps still in the tank. You should finish each session feeling like you could have done one more set, not wrecked. Grinding to failure buys very little muscle and costs a lot of recovery."],
+  ["Progression","Double progression. Stay at the same weight until you hit the TOP of the rep range on every set. Then add the increment and drop back to the bottom of the range. The app flags it when you've earned the jump."],
+  ["Rest","2–3 minutes on the first two lifts. 60–90 seconds on everything after. Don't rush the big ones — the rest is what lets you add weight."],
+  ["Spacing","One full day off between sessions. Mon / Wed / Fri or Tue / Thu / Sat. Three quality sessions beat five rushed ones."],
+  ["Deload","Every 7th week, run the same sessions at about 60% weight and two sets each. Not optional — it's what lets the next block go up."],
+  ["Protein","Roughly 1 gram per pound of bodyweight per day, and at least 35–40 g in one sitting. Muscle at 60 is harder to signal than it was at 40 — the dose per meal matters more than the daily total."],
+  ["What to track","Weight and reps, every set. That's it. The progress tab does the rest. If a number doesn't move for three sessions, change the exercise before you change the program."]
+];
+
+/* ═══ STATE ══════════════════════════════════════════════════ */
+let db=null, history=[], gym="office", day="A", draft={}, ticked={}, dl=null;
+const LS="sixtystrong.v1";
+const $=s=>document.querySelector(s), el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const key=e=>e.n;
+const fmt=n=>n.toLocaleString("en-CA");
+const iso=d=>d.toISOString().slice(0,10);
+const shortDate=s=>{const d=new Date(s+"T12:00:00");return d.toLocaleDateString("en-CA",{month:"short",day:"numeric"})};
+
+function readLocal(){try{const r=localStorage.getItem(LS);return r?JSON.parse(r):[]}catch(e){return[]}}
+function writeLocal(){try{localStorage.setItem(LS,JSON.stringify(history))}catch(e){}}
+
+/* ═══ HISTORY HELPERS ════════════════════════════════════════ */
+function sorted(){return history.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0)}
+function lastFor(name){
+  for(const w of sorted()){
+    const f=(w.exercises||[]).find(x=>x.name===name);
+    if(f&&f.sets&&f.sets.length)return{w,e:f};
+  }
+  return null;
+}
+function nextDay(){
+  const s=sorted();
+  if(!s.length)return"A";
+  const i=DAYS.indexOf(s[0].day);
+  return DAYS[(i+1)%3];
+}
+function earnedJump(ex,last){
+  if(!last||ex.time)return false;
+  const done=last.e.sets.filter(x=>x.reps>0);
+  if(done.length<ex.s)return false;
+  return done.every(x=>x.reps>=ex.hi);
+}
+function e1rm(w,r){return r>0&&w>0?Math.round(w*(1+r/30)):0}
+function bestE1RM(exName,w){
+  const f=(w.exercises||[]).find(x=>x.name===exName);
+  if(!f)return 0;
+  return Math.max(0,...f.sets.map(s=>e1rm(s.weight,s.reps)));
+}
+function sessionVolume(w){
+  let v=0;for(const e of(w.exercises||[]))for(const s of e.sets)v+=(s.weight||0)*(s.reps||0);
+  return Math.round(v);
+}
+
+/* ═══ SESSION VIEW ═══════════════════════════════════════════ */
+function draftKey(){return gym+"|"+day}
+function curList(){return P[day][gym]}
+
+function renderControls(){
+  const g=$("#seg-gym");g.innerHTML="";
+  for(const k of["office","pf"]){
+    const b=el("button");b.type="button";b.setAttribute("aria-pressed",String(gym===k));
+    b.innerHTML='<span class="k">'+GYMS[k].k+'</span><span class="s">'+GYMS[k].s+'</span>';
+    b.onclick=()=>{gym=k;draft={};ticked={};render()};g.appendChild(b);
+  }
+  const d=$("#seg-day");d.innerHTML="";
+  for(const k of DAYS){
+    const b=el("button");b.type="button";b.setAttribute("aria-pressed",String(day===k));
+    b.innerHTML='<span class="k">'+k+'</span><span class="s">'+esc(P[k].name.replace("Full Body · ","FB · "))+'</span>';
+    b.onclick=()=>{day=k;draft={};ticked={};render()};d.appendChild(b);
+  }
+  const nd=nextDay();
+  $("#next-pill").innerHTML=history.length
+    ? 'Up next &middot; <b>Session '+nd+'</b>'
+    : 'Start here &middot; <b>Session A</b>';
+}
+
+function renderExercises(){
+  const list=$("#ex-list");list.innerHTML="";
+  curList().forEach((ex,i)=>{
+    const k=key(ex), last=lastFor(k), jump=earnedJump(ex,last);
+    const card=el("div","ex");card.dataset.k=k;
+
+    const head=el("div","ex-head");
+    head.innerHTML='<span class="ex-num">'+String(i+1).padStart(2,"0")+'</span>'+
+      '<span class="ex-name"><span class="n">'+esc(ex.n)+'</span><span class="cue">'+esc(ex.cue)+'</span></span>'+
+      '<span class="ex-target">'+ex.s+' &times; '+(ex.time?(ex.lo+'-'+ex.hi+'s'):(ex.lo===ex.hi?ex.lo:ex.lo+'-'+ex.hi))+'</span>';
+    card.appendChild(head);
+
+    const lastBar=el("div","ex-last");
+    if(last){
+      const vals=last.e.sets.map(s=>ex.time?(s.reps+'s'):(s.weight?s.weight+'×'+s.reps:'—')).join("  ");
+      lastBar.innerHTML='<span class="lbl">Last · '+shortDate(last.w.date)+'</span><span class="vals">'+esc(vals)+'</span>'+
+        (jump?'<span class="cue-up">↑ Add '+ex.inc+' lb</span>':'');
+    }else{
+      lastBar.innerHTML='<span class="lbl">First time</span><span class="vals">'+
+        (ex.time?'Hold as long as form stays clean, then log it'
+        :ex.bw?'Bodyweight — log reps, add a belt or DB later'
+        :'Start with a weight you could do '+(ex.hi+2)+' reps with')+'</span>';
+    }
+    card.appendChild(lastBar);
+
+    const f=FORM[ex.n];
+    if(f){
+      const hid="how-"+k.replace(/[^a-z0-9]/gi,"");
+      const hb=el("button","howbtn");hb.type="button";hb.setAttribute("aria-expanded","false");hb.setAttribute("aria-controls",hid);
+      hb.innerHTML='How to do it <svg class="cv" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+      const hp=el("div","how");hp.id=hid;hp.hidden=true;
+      hp.innerHTML='<p><b>Set up</b>'+esc(f.s)+'</p><p><b>The rep</b>'+esc(f.d)+'</p>'+
+        '<p class="miss"><b>What goes wrong</b>'+esc(f.m)+'</p>'+
+        '<a href="'+watchUrl(ex.n)+'" target="_blank" rel="noopener">Watch it &#8599;</a>';
+      hb.onclick=()=>{const on=hb.getAttribute("aria-expanded")==="true";hb.setAttribute("aria-expanded",String(!on));hp.hidden=on};
+      card.appendChild(hb);card.appendChild(hp);
+    }
+
+    const sets=el("div","sets");
+    for(let s=0;s<ex.s;s++){
+      const row=el("div","setrow");
+      const id=k.replace(/[^a-z0-9]/gi,"")+"-"+s;
+      let prevW="",prevR="";
+      if(last&&last.e.sets[s]){prevW=last.e.sets[s].weight||"";prevR=last.e.sets[s].reps||""}
+      const sug=jump&&prevW?Number(prevW)+ex.inc:prevW;
+      const dv=draft[draftKey()]&&draft[draftKey()][k]&&draft[draftKey()][k][s];
+      row.innerHTML='<span class="sn">'+(s+1)+'</span>'+
+        (ex.time?'<div class="fld" style="grid-column:2 / span 2"><input id="'+id+'-r" type="number" inputmode="numeric" step="5" placeholder="'+(prevR||ex.lo)+'" value="'+(dv&&dv.reps||"")+'"><span class="u">sec</span></div>'
+        :'<div class="fld"><input id="'+id+'-w" type="number" inputmode="decimal" step="2.5" placeholder="'+(sug!==""?sug:(ex.bw?"BW":"—"))+'" value="'+(dv&&dv.weight||"")+'"><span class="u">lb</span></div>'+
+         '<div class="fld"><input id="'+id+'-r" type="number" inputmode="numeric" placeholder="'+(prevR||ex.lo)+'" value="'+(dv&&dv.reps||"")+'"><span class="u">rep</span></div>')+
+        '<button class="tick" type="button" id="'+id+'-t" aria-label="Mark set '+(s+1)+' complete" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>';
+      sets.appendChild(row);
+    }
+    card.appendChild(sets);
+    list.appendChild(card);
+
+    for(let s=0;s<ex.s;s++){
+      const id=k.replace(/[^a-z0-9]/gi,"")+"-"+s;
+      const wi=document.getElementById(id+"-w"), ri=document.getElementById(id+"-r"), tb=document.getElementById(id+"-t");
+      const push=()=>{
+        const dk=draftKey();draft[dk]=draft[dk]||{};draft[dk][k]=draft[dk][k]||[];
+        draft[dk][k][s]={weight:wi?parseFloat(wi.value)||0:0,reps:parseFloat(ri.value)||0};
+        updateDock();
+      };
+      if(wi)wi.addEventListener("input",push);
+      ri.addEventListener("input",push);
+      tb.addEventListener("click",()=>{
+        const on=tb.getAttribute("aria-pressed")==="true";
+        tb.setAttribute("aria-pressed",String(!on));
+        if(!on){
+          if(wi&&!wi.value&&wi.placeholder&&!isNaN(parseFloat(wi.placeholder)))wi.value=parseFloat(wi.placeholder);
+          if(!ri.value&&ri.placeholder&&!isNaN(parseFloat(ri.placeholder)))ri.value=parseFloat(ri.placeholder);
+          push();
+        }
+        const tks=card.querySelectorAll('.tick[aria-pressed="true"]').length;
+        card.classList.toggle("done",tks===ex.s);
+      });
+      if(dv_has(k,s))tb.setAttribute("aria-pressed","true");
+    }
+  });
+  updateDock();
+}
+function dv_has(k,s){const d=draft[draftKey()];return !!(d&&d[k]&&d[k][s]&&(d[k][s].reps>0))}
+
+function collect(){
+  const d=draft[draftKey()]||{};
+  const out=[];
+  for(const ex of curList()){
+    const k=key(ex), rows=d[k]||[];
+    const sets=[];
+    for(let s=0;s<ex.s;s++){
+      const v=rows[s];
+      if(v&&v.reps>0)sets.push({set:s+1,weight:v.weight||0,reps:v.reps});
+    }
+    if(sets.length)out.push({name:ex.n,sets:sets});
+  }
+  return out;
+}
+function updateDock(){
+  const ex=collect();
+  let vol=0,sets=0;
+  for(const e of ex)for(const s of e.sets){vol+=s.weight*s.reps;sets++}
+  $("#dock-vol").textContent=sets?(fmt(Math.round(vol))+" lb · "+sets+" sets"):"0 lb";
+  $("#btn-finish").disabled=sets===0;
+}
+
+/* ═══ SAVE ═══════════════════════════════════════════════════ */
+async function finish(){
+  const exercises=collect();
+  if(!exercises.length)return;
+  const rec={
+    id:iso(new Date())+"-"+Math.random().toString(36).slice(2,7),
+    date:iso(new Date()), gym:gym, day:day, dayName:P[day].name,
+    notes:$("#notes").value.trim(), exercises:exercises,
+    volume:0, loggedAt:new Date().toISOString()
+  };
+  rec.volume=sessionVolume(rec);
+  history.push(rec);writeLocal();
+  draft[draftKey()]={};$("#notes").value="";
+  day=nextDay();
+  render();
+  toast("Session logged · "+fmt(rec.volume)+" lb");
+  if(db){try{await db.collection("workouts").doc(rec.id).set(rec)}catch(e){setSync("Saved on this device — couldn't reach the cloud store.")}}
+}
+function toast(msg){
+  const t=el("div","toast");t.textContent=msg;document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+function setSync(m){$("#sync-note").textContent=m}
+
+/* ═══ PROGRESS ═══════════════════════════════════════════════ */
+function spark(vals,w,h){
+  if(vals.length<2)return'<svg class="spark" viewBox="0 0 '+w+' '+h+'"></svg>';
+  const mn=Math.min(...vals),mx=Math.max(...vals),rg=(mx-mn)||1,p=3;
+  const pts=vals.map((v,i)=>[p+i*(w-2*p)/(vals.length-1), h-p-((v-mn)/rg)*(h-2*p)]);
+  const dstr=pts.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" ");
+  const area=dstr+" L"+pts[pts.length-1][0].toFixed(1)+" "+(h-p)+" L"+pts[0][0].toFixed(1)+" "+(h-p)+" Z";
+  const last=pts[pts.length-1];
+  return'<svg class="spark" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">'+
+    '<path d="'+area+'" fill="var(--steel-soft)" stroke="none"/>'+
+    '<path d="'+dstr+'" fill="none" stroke="var(--steel)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="2.6" fill="var(--accent)"/></svg>';
+}
+function renderProgress(){
+  const v=$("#v-prog");v.innerHTML="";
+  const s=sorted();
+  if(!s.length){
+    const p=el("div","panel");
+    p.innerHTML='<div class="empty"><strong>Nothing logged yet</strong>Log Session A and this fills in — consistency, volume, and a trend line on every lift you repeat.</div>';
+    v.appendChild(p);return;
+  }
+  /* KPIs */
+  const now=new Date(), wk=[];
+  for(let i=11;i>=0;i--){
+    const end=new Date(now);end.setDate(end.getDate()-i*7);
+    const start=new Date(end);start.setDate(start.getDate()-6);
+    wk.push(s.filter(w=>{const d=new Date(w.date+"T12:00:00");return d>=start&&d<=end}).length);
+  }
+  let streak=0;for(let i=wk.length-1;i>=0;i--){if(wk[i]>0)streak++;else break}
+  const last8=s.slice(0,8).map(sessionVolume).reverse();
+  const totalVol=s.reduce((a,w)=>a+sessionVolume(w),0);
+  const k=el("div","kpis");
+  k.innerHTML=
+    '<div class="kpi"><div class="k">Sessions</div><div class="v">'+s.length+'</div><div class="s">since '+shortDate(s[s.length-1].date)+'</div></div>'+
+    '<div class="kpi"><div class="k">Week streak</div><div class="v">'+streak+'</div><div class="s">'+(streak>=2?"holding":"build it")+'</div></div>'+
+    '<div class="kpi"><div class="k">Total lifted</div><div class="v">'+(totalVol>=1000?(totalVol/1000).toFixed(1)+"k":totalVol)+'</div><div class="s">pounds moved</div></div>';
+  v.appendChild(k);
+
+  /* consistency */
+  const cp=el("div","panel");
+  const mx=Math.max(3,...wk);
+  cp.innerHTML='<h2>Sessions per week · last 12</h2><div class="weeks">'+
+    wk.map(n=>'<div class="'+(n>=3?"h3":n===2?"h2":n===1?"h1":"")+'" style="height:'+Math.max(6,(n/mx)*100)+'%" title="'+n+' sessions"></div>').join("")+
+    '</div><div class="weeks-ax"><span>12 weeks ago</span><span>This week</span></div>';
+  v.appendChild(cp);
+
+  /* volume trend */
+  if(last8.length>=2){
+    const vp=el("div","panel");
+    const mxv=Math.max(...last8);
+    vp.innerHTML='<h2>Session volume · last '+last8.length+'</h2><div class="weeks" style="height:64px">'+
+      last8.map((n,i)=>'<div class="'+(i===last8.length-1?"h3":"h2")+'" style="height:'+Math.max(6,(n/mxv)*100)+'%" title="'+fmt(n)+' lb"></div>').join("")+
+      '</div><div class="weeks-ax"><span class="mono">'+fmt(last8[0])+' lb</span><span class="mono">'+fmt(last8[last8.length-1])+' lb</span></div>';
+    v.appendChild(vp);
+  }
+
+  /* per-lift trend */
+  const names=[...new Set(s.flatMap(w=>(w.exercises||[]).map(e=>e.name)))];
+  const rows=names.map(n=>{
+    const pts=s.slice().reverse().map(w=>bestE1RM(n,w)).filter(x=>x>0);
+    const heavy=s.map(w=>{const f=(w.exercises||[]).find(e=>e.name===n);return f?Math.max(...f.sets.map(x=>x.weight)):0}).filter(x=>x>0);
+    return{n:n,pts:pts,top:heavy[0]||0,delta:pts.length>1?pts[pts.length-1]-pts[0]:0};
+  }).filter(r=>r.pts.length).sort((a,b)=>b.pts.length-a.pts.length);
+  if(rows.length){
+    const lp=el("div","panel");
+    lp.innerHTML='<h2>Lift by lift · estimated 1-rep max</h2>'+rows.map(r=>
+      '<div class="lift"><span class="nm">'+esc(r.n)+'</span>'+spark(r.pts,74,26)+
+      '<span class="num">'+r.pts[r.pts.length-1]+'<small>'+r.top+' lb top set</small></span>'+
+      '<span class="delta '+(r.delta>0?"pos":"flat")+'">'+(r.delta>0?"+"+r.delta:r.delta<0?r.delta:"—")+'</span></div>').join("");
+    v.appendChild(lp);
+  }
+
+  /* log */
+  const lg=el("div","panel");
+  lg.innerHTML='<h2>Session log</h2>'+s.slice(0,14).map(w=>
+    '<div class="log-row"><span class="d">'+shortDate(w.date)+'</span>'+
+    '<span class="b"><b>'+w.day+' · '+esc(w.dayName||P[w.day].name)+'</b><br><span>'+esc(GYMS[w.gym].k)+(w.notes?' · '+esc(w.notes):'')+'</span></span>'+
+    '<span class="v">'+fmt(sessionVolume(w))+' lb</span></div>').join("");
+  v.appendChild(lg);
+}
+
+/* ═══ PLAN ═══════════════════════════════════════════════════ */
+function renderPlan(){
+  const v=$("#v-plan");if(v.dataset.done)return;v.dataset.done="1";
+  const rp=el("div","panel");
+  rp.innerHTML='<h2>How this works</h2>'+PRINCIPLES.map(p=>
+    '<div class="rule"><span class="rk">'+esc(p[0])+'</span><span class="rv">'+esc(p[1])+'</span></div>').join("");
+  v.appendChild(rp);
+  for(const g of["office","pf"]){
+    const p=el("div","panel");
+    let h='<h2>'+esc(GYMS[g].k)+'</h2>';
+    for(const d of DAYS){
+      h+='<div class="planday"><div class="ph"><span class="a">'+d+'</span><span class="b">'+esc(P[d].name)+'</span></div>'+
+        P[d][g].map(e=>'<div class="planrow"><span class="x">'+esc(e.n)+'</span><span class="y">'+e.s+' × '+(e.time?e.lo+'-'+e.hi+'s':(e.lo===e.hi?e.lo:e.lo+'-'+e.hi))+'</span></div>').join("")+'</div>';
+    }
+    p.innerHTML=h;v.appendChild(p);
+  }
+  const note=el("div","panel");
+  note.innerHTML='<h2>Two rooms, one program</h2><div class="rule"><span class="rv">The shop gym is the better muscle-building room — a barbell and adjustable dumbbells let you add small, steady load, which is the whole game. Treat Planet Fitness as the equal-weight alternate when you can\'t get to the office, and as the better option for the single-joint work where machines are genuinely kinder to a 60-year-old shoulder or knee. The movement patterns match across both, so a lift\'s trend line keeps building whichever room you were in.</span></div>'+
+  '<div class="rule"><span class="rk">The squat</span><span class="rv">Session A is anchored by a barbell back squat because the shop rack has safeties. Set the pins one notch below your bottom position every single time — that is what lets you push a squat hard alone in an empty office gym. High-bar, bar across the traps, knees tracking over the toes. If the bar position bothers a shoulder, switch to a front squat rather than dropping the weight.</span></div>'+
+  '<div class="rule"><span class="rk">Bailing</span><span class="rv">If a rep stalls, keep the bar on your back, sit it down onto the pins, and step out forward. Practise it once with an empty bar before the first heavy session so the movement is automatic.</span></div>';
+  v.appendChild(note);
+
+  const lib=el("div","panel");
+  lib.innerHTML='<h2>If you want to see it done</h2>'+
+    '<div class="rule"><span class="rv">Every exercise in the Session tab has a <b>How to do it</b> button — setup, the rep itself, and the mistake that actually shows up. Each one also has a <b>Watch it</b> link that pulls up video demonstrations of that specific lift.</span></div>'+
+    '<div class="rule"><span class="rk">ExRx</span><span class="rv"><a href="https://exrx.net/Lists/Directory" target="_blank" rel="noopener">exrx.net/Lists/Directory</a> — the reference librarians of this world. Plain animations and precise written instructions, organized by muscle group. No selling, no fads. Best single source if you want to look something up properly.</span></div>'+
+    '<div class="rule"><span class="rk">Precision Nutrition</span><span class="rv"><a href="https://www.precisionnutrition.com/video-exercise-library" target="_blank" rel="noopener">precisionnutrition.com/video-exercise-library</a> — 400+ free short demo videos, clean and unhyped.</span></div>'+
+    '<div class="rule"><span class="rk">Worth paying for</span><span class="rv">One session with a decent coach at a Kelowna gym, purely to watch you squat, bench, row and deadlift. An hour of someone watching your actual body beats any number of videos, and it front-loads the corrections before you have three years of a bad pattern built in.</span></div>';
+  v.appendChild(lib);
+}
+
+/* ═══ CSV ════════════════════════════════════════════════════ */
+async function exportCsv(){
+  if(!dl)return;
+  const rows=[["Date","Gym","Session","Session name","Exercise","Set","Weight (lb)","Reps","Est 1RM","Notes"]];
+  for(const w of sorted())for(const e of(w.exercises||[]))for(const s of e.sets)
+    rows.push([w.date,GYMS[w.gym].k,w.day,w.dayName||"",e.name,s.set,s.weight,s.reps,e1rm(s.weight,s.reps),w.notes||""]);
+  const csv=rows.map(r=>r.map(c=>{const t=String(c);return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t}).join(",")).join("\n");
+  try{await dl.save({filename:"sixty-strong-log-"+iso(new Date())+".csv",data:csv});}catch(e){}
+}
+
+/* ═══ BOOT ═══════════════════════════════════════════════════ */
+function render(){renderControls();renderExercises()}
+function switchTab(id){
+  for(const t of[["tab-today","v-today"],["tab-prog","v-prog"],["tab-plan","v-plan"]]){
+    const on=t[0]===id;
+    document.getElementById(t[0]).setAttribute("aria-selected",String(on));
+    document.getElementById(t[1]).hidden=!on;
+  }
+  $("#dock").style.display=id==="tab-today"?"":"none";
+  if(id==="tab-prog")renderProgress();
+  if(id==="tab-plan")renderPlan();
+}
+$("#tab-today").onclick=()=>switchTab("tab-today");
+$("#tab-prog").onclick=()=>switchTab("tab-prog");
+$("#tab-plan").onclick=()=>switchTab("tab-plan");
+$("#btn-finish").onclick=finish;
+$("#btn-csv").onclick=exportCsv;
+$("#today-date").textContent=new Date().toLocaleDateString("en-CA",{weekday:"long",month:"long",day:"numeric"});
+
+history=readLocal();
+day=nextDay();
+render();
+
+(async()=>{
+  try{
+    db=await claude.use("db");
+    if(db){
+      const snap=await db.collection("workouts").get();
+      const cloud=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+      const seen=new Set(cloud.map(w=>w.id));
+      const merged=cloud.concat(history.filter(w=>!seen.has(w.id)));
+      history=merged;writeLocal();
+      for(const w of history)if(!seen.has(w.id)){try{await db.collection("workouts").doc(w.id).set(w)}catch(e){}}
+      day=nextDay();render();
+      if($("#tab-prog").getAttribute("aria-selected")==="true")renderProgress();
+      setSync("Synced — your log is saved and picks up on any device.");
+    }else{
+      setSync("Saved on this device only.");
+    }
+  }catch(e){setSync("Saved on this device only.")}
+  try{dl=await claude.use("downloads");if(dl)$("#btn-csv").hidden=false;}catch(e){}
+})();
+</script>
+
+</body></html>
