@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sixty Strong tests</title>
+<style>body{font:14px ui-monospace,Menlo,monospace;padding:16px;background:#fff;color:#111}.p{color:#1a7f37}.f{color:#c0392b;font-weight:bold}</style>
+</head><body>
+<h1>Sixty Strong — core logic tests</h1>
+<pre id="out"></pre>
+<script src="../app/program.js"></script>
+<script src="../app/core.js"></script>
+<script>
+const C = window.SSCore, out = document.getElementById("out");
+let pass = 0, fail = 0;
+function t(name, fn){
+  try { const r = fn(); if (r === true){ pass++; out.innerHTML += '<span class="p">PASS</span> '+name+'\n'; }
+        else { fail++; out.innerHTML += '<span class="f">FAIL</span> '+name+' → '+JSON.stringify(r)+'\n'; } }
+  catch(e){ fail++; out.innerHTML += '<span class="f">FAIL</span> '+name+' threw '+e.message+'\n'; }
+}
+const W = (id, date, day, ex, extra)=>Object.assign({id, date, day, gym:"office", dayName:"x", notes:"", loggedAt:date+"T18:00:00Z", exercises:ex}, extra||{});
+const squat = sets=>({name:"Barbell Back Squat", sets:sets.map((s,i)=>({set:i+1, weight:s[0], reps:s[1]}))});
+
+// Synthetic fixture shaped exactly like the claude.ai export (real data stays in the git-ignored backups/).
+// Pull-up and dip carry a bodyweight typed into the weight box, as happened in the original app.
+const exported = [
+  {"date":"2026-01-05","day":"A","dayName":"Full Body · Press","exercises":[{"name":"Barbell Back Squat","sets":[{"reps":8,"set":1,"weight":100}]}],"gym":"office","id":"fixture-1","loggedAt":"2026-01-05T18:00:00.000Z","notes":"","volume":800},
+  {"date":"2026-01-05","day":"A","dayName":"Full Body · Press","exercises":[
+    {"name":"Barbell Back Squat","sets":[{"reps":8,"set":1,"weight":100},{"reps":8,"set":2,"weight":100},{"reps":8,"set":3,"weight":100}]},
+    {"name":"Barbell Bench Press","sets":[{"reps":8,"set":1,"weight":80},{"reps":8,"set":2,"weight":80},{"reps":5,"set":3,"weight":80},{"reps":5,"set":4,"weight":80}]},
+    {"name":"Pull-Up","sets":[{"reps":2,"set":1,"weight":200},{"reps":1,"set":2,"weight":200}]},
+    {"name":"DB Romanian Deadlift","sets":[{"reps":6,"set":1,"weight":30},{"reps":6,"set":2,"weight":30},{"reps":6,"set":3,"weight":30}]},
+    {"name":"DB Lateral Raise","sets":[{"reps":3,"set":1,"weight":20},{"reps":10,"set":2,"weight":15},{"reps":8,"set":3,"weight":15}]},
+    {"name":"Dip","sets":[{"reps":10,"set":1,"weight":200}]},
+    {"name":"Plank","sets":[{"reps":30,"set":1,"weight":0},{"reps":20,"set":2,"weight":0},{"reps":17,"set":3,"weight":0}]}],
+   "gym":"office","id":"fixture-2","loggedAt":"2026-01-05T18:40:00.000Z","notes":"","volume":7950}
+];
+
+t("program loaded: 3 sessions × 2 gyms × 7 exercises", ()=>{ const P = SS_PROGRAM.P; return ["A","B","C"].every(d=>P[d].office.length===7 && P[d].pf.length===7) || P; });
+t("every exercise has form notes", ()=>{ const miss=[]; for (const d of "ABC") for (const g of ["office","pf"]) for (const e of SS_PROGRAM.P[d][g]) if (!SS_PROGRAM.FORM[e.n]) miss.push(e.n); return miss.length===0 || miss; });
+t("isoLocal uses local date, not UTC", ()=>{ const d = new Date(2026,8,28,23,30); return C.isoLocal(d)==="2026-09-28" || C.isoLocal(d); });
+t("nextDay rotates A→B→C→A", ()=>C.nextDay([])==="A" && C.nextDay([W("1","2026-09-01","A",[])])==="B" && C.nextDay([W("1","2026-09-01","C",[])])==="A");
+t("nextDay uses most recent (same-day tie broken by loggedAt)", ()=>{
+  const h=[W("a","2026-09-28","A",[],{loggedAt:"2026-09-28T10:00:00Z"}), W("b","2026-09-28","B",[],{loggedAt:"2026-09-28T11:00:00Z"})];
+  return C.nextDay(h)==="C" || C.nextDay(h); });
+t("earnedJump only when every set hits top of range", ()=>{
+  const ex = SS_PROGRAM.P.A.office[0];  // squat 3 × 8-10
+  const hit = {e:{sets:[{reps:10},{reps:10},{reps:10}]}}, miss = {e:{sets:[{reps:10},{reps:9},{reps:10}]}}, short = {e:{sets:[{reps:10},{reps:10}]}};
+  return C.earnedJump(ex,hit) && !C.earnedJump(ex,miss) && !C.earnedJump(ex,short) && !C.earnedJump(ex,null); });
+t("e1rm Epley", ()=>C.e1rm(100,10)===133 && C.e1rm(0,5)===0 && C.e1rm(100,0)===0);
+t("volume excludes bodyweight + timed (old total 7950 → 5350)", ()=>{
+  const v = C.sessionVolume(exported[1]); return v===5350 || v; });
+t("parseBackup accepts backup object, array, single doc", ()=>{
+  const a = C.parseBackup(JSON.stringify({app:"sixty-strong",workouts:exported})).workouts.length;
+  const b = C.parseBackup(JSON.stringify(exported)).workouts.length;
+  const c = C.parseBackup(JSON.stringify(exported[0])).workouts.length;
+  return (a===2 && b===2 && c===1) || [a,b,c]; });
+t("parseBackup rejects junk with a clear error", ()=>{ try { C.parseBackup("not json"); return "no throw"; } catch(e){ return /valid JSON/.test(e.message); } });
+t("parseBackup counts invalid records", ()=>{ const r = C.parseBackup(JSON.stringify([exported[0], {id:"x"}])); return (r.workouts.length===1 && r.rejected===1) || r; });
+t("merge is idempotent: importing twice adds nothing", ()=>{
+  const once = C.mergeWorkouts([], C.parseBackup(JSON.stringify(exported)).workouts);
+  const twice = C.mergeWorkouts(once.merged, C.parseBackup(JSON.stringify(exported)).workouts);
+  return (once.added===2 && twice.added===0 && twice.skipped===2 && twice.merged.length===2) || [once.added, twice.added]; });
+t("backup → parse round-trip preserves every set", ()=>{
+  const h = C.parseBackup(JSON.stringify(exported)).workouts;
+  const back = C.parseBackup(JSON.stringify(C.toBackup(h))).workouts;
+  const count = x=>x.reduce((a,w)=>a+w.exercises.reduce((b,e)=>b+e.sets.length,0),0);
+  return (back.length===2 && count(back)===count(h) && count(h)===20) || [back.length, count(back), count(h)]; });
+t("CSV has header + one row per set, quotes commas", ()=>{
+  const h = C.parseBackup(JSON.stringify(exported)).workouts; h[0].notes = 'felt good, "strong"';
+  const csv = C.toCSV(h).split("\n"); return (csv.length===21 && csv[0].startsWith("Date,Gym") && C.toCSV(h).includes('"felt good, ""strong"""')) || csv.length; });
+t("deload flags week 7, 14", ()=>{
+  const h=[W("a","2026-01-01","A",[])];
+  const d6 = C.deloadInfo(h,new Date(2026,1,10)), d7 = C.deloadInfo(h,new Date(2026,1,12)), d14 = C.deloadInfo(h,new Date(2026,3,2));
+  return (!d6.isDeload && d7.isDeload && d7.week===7 && d14.isDeload && d14.week===14) || [d6,d7,d14]; });
+t("rest timer: 150s first two lifts, 75s after", ()=>C.restSeconds(0)===150 && C.restSeconds(1)===150 && C.restSeconds(2)===75);
+t("liftScore: bodyweight → best reps, timed → best seconds, loaded → e1RM", ()=>{
+  const w = C.cleanWorkout(exported[1]);
+  return (C.liftScore("Pull-Up",w)===2 && C.liftScore("Plank",w)===30 && C.liftScore("Barbell Back Squat",w)===127) || [C.liftScore("Pull-Up",w),C.liftScore("Plank",w),C.liftScore("Barbell Back Squat",w)]; });
+t("weekCounts has 12 buckets and counts this week", ()=>{ const wk = C.weekCounts([W("a",C.isoLocal(),"A",[])]); return (wk.length===12 && wk[11]===1) || wk; });
+
+
+// ── health (synthetic values) ──────────────────────────
+const HX = [
+  {id:"l1", type:"lab", date:"2025-06-01", marker:"TEST", value:3.0, unit:"u/L", refLow:0, refHigh:3.5},
+  {id:"l2", type:"lab", date:"2026-05-01", marker:"TEST", value:2.7, unit:"u/L", refLow:0, refHigh:3.5},
+  {id:"c1", type:"checkup", name:"Annual test", marker:"TEST", everyMonths:12},
+  {id:"w1", type:"weight", date:"2026-08-01", lb:200},
+  {id:"w2", type:"weight", date:"2026-09-20", lb:195.5},
+  {id:"p1", type:"protein", date:"2026-09-28", grams:40},
+  {id:"p2", type:"protein", date:"2026-09-28", grams:35},
+  {id:"p3", type:"protein", date:"2026-09-27", grams:120},
+  {id:"n1", type:"note", date:"2026-06-01", title:"Something to check", status:"open"}
+];
+t("format-2 backup parses workouts + health + profile + targets", ()=>{
+  const txt = JSON.stringify({app:"sixty-strong", format:2, workouts:exported, health:HX.concat([{id:"bad", type:"lab"}]), profile:{name:"X", birthMonth:"1970-03"}, targets:{proteinDailyG:150}});
+  const r = C.parseBackup(txt);
+  return (r.workouts.length===2 && r.health.length===HX.length && r.rejected===1 && r.profile.birthMonth==="1970-03" && r.targets.proteinDailyG===150) || r; });
+t("format-1 backup still parses (no health section)", ()=>{ const r = C.parseBackup(JSON.stringify({app:"sixty-strong", format:1, workouts:exported})); return (r.workouts.length===2 && r.health.length===0 && r.profile===null) || r; });
+t("health merge is idempotent", ()=>{ const a = C.mergeById([], HX), b = C.mergeById(a.merged, HX); return (a.added===HX.length && b.added===0) || [a.added,b.added]; });
+t("labTrend: change, %, per-year, in range", ()=>{
+  const tr = C.labTrend(C.labSeries(HX,"TEST"));
+  return (tr.latest.value===2.7 && tr.change===-0.3 && tr.pct===-10 && tr.months===11 && tr.inRange===true && Math.abs(tr.perYear+0.33)<0.02) || tr; });
+t("labTrend flags a result above the lab range", ()=>{ const tr = C.labTrend([{id:"x",type:"lab",date:"2026-01-01",marker:"T",value:4.1,unit:"",refLow:0,refHigh:3.5}]); return tr.inRange===false || tr; });
+t("checkup due date follows the latest lab result", ()=>{
+  const c = HX.find(h=>h.type==="checkup");
+  const ok = C.checkupStatus(c, HX, new Date(2026,8,28)), late = C.checkupStatus(c, HX, new Date(2027,5,1)), soon = C.checkupStatus(c, HX, new Date(2027,3,15));
+  return (ok.due==="2027-05-01" && ok.state==="ok" && late.state==="overdue" && soon.state==="soon") || [ok,late,soon]; });
+t("addMonths clamps month ends", ()=>C.addMonths("2026-01-31",1)==="2026-02-28" && C.addMonths("2025-06-24",12)==="2026-06-24");
+t("protein: sums today, 7-day series", ()=>{
+  const days = C.proteinDays(HX, 7, new Date(2026,8,28));
+  return (C.proteinForDay(HX,"2026-09-28")===75 && days.length===7 && days[6].grams===75 && days[5].grams===120) || days; });
+t("weightTrend: latest, total change", ()=>{ const w = C.weightTrend(HX, new Date(2026,8,28)); return (w.latest.lb===195.5 && w.total===-4.5 && w.daysSince===8) || w; });
+t("ageInfo: counts down to the birthday month", ()=>{
+  const a = C.ageInfo({birthMonth:"1970-03"}, new Date(2030,1,20)), b = C.ageInfo({birthMonth:"1970-03"}, new Date(2030,2,5));
+  return (a.age===59 && a.nextAge===60 && a.monthsToNext===1 && b.age===60 && b.birthdayThisMonth) || [a,b]; });
+t("backup round-trip keeps health, profile, targets", ()=>{
+  const bk = C.toBackup(C.parseBackup(JSON.stringify(exported)).workouts, new Date(2026,0,1), {health:HX, profile:{name:"X"}, targets:{proteinDailyG:150}});
+  const r = C.parseBackup(JSON.stringify(bk));
+  return (bk.format===2 && r.health.length===HX.length && r.profile.name==="X" && r.targets.proteinDailyG===150 && r.workouts.length===2) || r; });
+t("cleanHealth rejects missing dates and silly values", ()=>
+  C.cleanHealth({id:"a",type:"weight",lb:190})===null && C.cleanHealth({id:"b",type:"weight",date:"2026-01-01",lb:5})===null &&
+  C.cleanHealth({id:"c",type:"protein",date:"2026-01-01",grams:0})===null && !!C.cleanHealth({id:"d",type:"checkup",name:"Eye exam",everyMonths:24}));
+
+out.innerHTML += '\n'+(fail ? '<span class="f">'+fail+' FAILED</span>, ' : '')+'<span class="p">'+pass+' passed</span>\n';
+document.title = (fail ? "FAIL " : "PASS ") + pass + "/" + (pass+fail);
+window.__testResult = {pass, fail};
+</script>
+</body></html>
