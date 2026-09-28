@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sixty Strong</title>
+<meta name="description" content="Three-day strength rotation and training log.">
+<meta name="theme-color" content="#ECEEF1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0C0F" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sixty Strong">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9A3D"/><stop offset="1" stop-color="#D2440E"/></linearGradient>
+  <linearGradient id="hGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6B1F" stop-opacity=".9"/><stop offset="1" stop-color="#FF6B1F" stop-opacity="0"/></linearGradient>
+</defs></svg>
+<div class="wrap">
+  <header class="mast">
+    <div class="mast-row">
+      <h1><span class="sixty">Sixty</span> Strong</h1>
+      <span class="tag" id="block-tag">3&#8209;day rotation</span>
+    </div>
+    <div class="mast-row" style="margin-top:4px">
+      <span class="date mono" id="today-date"></span>
+      <span class="nextpill" id="next-pill"></span>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-today" aria-selected="true" aria-controls="v-today">Session</button>
+    <button role="tab" id="tab-prog" aria-selected="false" aria-controls="v-prog">Progress</button>
+    <button role="tab" id="tab-health" aria-selected="false" aria-controls="v-health">Health</button>
+    <button role="tab" id="tab-plan" aria-selected="false" aria-controls="v-plan">Plan</button>
+  </div>
+
+  <section id="v-today" role="tabpanel" aria-labelledby="tab-today">
+    <div class="hero" id="hero" aria-live="polite">
+      <div><span class="hero-k">Session</span><span class="hero-letter" id="hero-letter">A</span></div>
+      <div class="hero-m">
+        <span class="hn" id="hero-name"></span>
+        <span class="hf" id="hero-focus"></span>
+        <div class="hero-chips" id="hero-chips"></div>
+      </div>
+      <div class="ring" id="ring" role="img" aria-label="Sets completed">
+        <svg viewBox="0 0 80 80" aria-hidden="true">
+          <circle class="trk" cx="40" cy="40" r="34" fill="none" stroke-width="7"/>
+          <circle class="val" id="ring-val" cx="40" cy="40" r="34" fill="none" stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+        </svg>
+        <div class="rt"><b id="ring-n">0</b><span id="ring-of">of 0 sets</span></div>
+      </div>
+    </div>
+    <div id="banners" aria-live="polite"></div>
+    <div class="ctl">
+      <div class="ctl-group">
+        <span class="ctl-label">Where</span>
+        <div class="seg" id="seg-gym"></div>
+      </div>
+      <div class="ctl-group">
+        <span class="ctl-label">Session</span>
+        <div class="seg" id="seg-day"></div>
+      </div>
+    </div>
+    <div id="ex-list"></div>
+    <textarea class="notes" id="notes" placeholder="Notes — how it felt, what to change next time (tap the mic on the keyboard to dictate)"></textarea>
+    <div class="sync" id="sync-note">Saved on this phone as you go — nothing is lost if the app closes.</div>
+  </section>
+
+  <section id="v-prog" role="tabpanel" aria-labelledby="tab-prog" hidden></section>
+  <section id="v-health" role="tabpanel" aria-labelledby="tab-health" hidden></section>
+  <section id="v-plan" role="tabpanel" aria-labelledby="tab-plan" hidden></section>
+</div>
+
+<div class="dock" id="dock">
+  <div class="dock-bar" id="dock-bar"></div>
+  <div class="dock-in">
+    <div class="stat">
+      <div class="k">Volume</div>
+      <div class="v" id="dock-vol">0 lb</div>
+    </div>
+    <button class="rest" id="rest" type="button" aria-label="Rest timer — tap to dismiss"><span class="rl" id="rest-l">Rest</span><span id="rest-v">0:00</span><span class="rf" id="rest-f"></span></button>
+    <button class="btn" id="btn-finish" disabled>Log session</button>
+  </div>
+</div>
+
+<noscript><p style="padding:16px">Sixty Strong needs JavaScript turned on.</p></noscript>
+<script src="program.js"></script>
+<script src="core.js"></script>
+<script src="store.js"></script>
+<script src="health.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
