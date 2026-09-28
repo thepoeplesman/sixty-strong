@@ -36,7 +36,7 @@ Both sessions you logged on 28 Sep came across. One is a single set of squats sa
 Your volume numbers now leave out bodyweight moves (pull-ups, dips) and planks. Before, typing your bodyweight on pull-ups inflated the total. On those moves, the weight box is now for **added** weight only (a belt or a dumbbell).
 
 ## Installing it on your iPhone (once it's online)
-1. Open **https://thepoeplesman.github.io/sixty-strong/app/** in **Safari**. It works once you've published it; see README → Publish, about 5 minutes with GitHub Desktop.
+1. Open **https://thepoeplesman.github.io/sixty-strong/app/** in **Safari**. It's live.
 2. Tap **Share** (the square with the arrow) → **Add to Home Screen** → **Add**.
 3. Open it from the new orange **60** icon. It runs full-screen like a normal app.
 4. Go to **Progress → Restore** and pick `sixty-strong-import.json`. It's in the Files app → iCloud Drive → Desktop → PEOPLES AI TWIN → Personal → Sixty Strong App → backups. This one file brings in your workouts **and** your health data.

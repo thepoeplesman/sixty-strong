@@ -19,7 +19,7 @@ Darryl's personal health, strength and longevity PWA. The Training tabs hold wor
 ## Every change
 1. Bump `CACHE` in `app/sw.js` and `APP_VERSION` in `app/app.js`. Otherwise phones keep the old cached version.
 2. Serve locally: `python3 -m http.server 8766 --bind 127.0.0.1 --directory "$HOME/Desktop/PEOPLES AI TWIN/Personal/Sixty Strong App"` (or `.claude/launch.json` "sixty-strong"). Open `http://127.0.0.1:8766/tests/test.html`; the title must read PASS. Then check `/app/` at 375 px width in both light and dark mode.
-3. Deploy: commit and push to the GitHub Pages repo (see README "Publish"). Only when Darryl asks. The first push needs his repo, and there must be no credentials in chat.
+3. Deploy: only when Darryl asks. The live site is https://thepoeplesman.github.io/sixty-strong/app/ (repo `thepoeplesman/sixty-strong`, remote `origin`). Git has no GitHub credentials here, so publish by uploading changed files at `github.com/thepoeplesman/sixty-strong/upload/main/<folder>` in his signed-in Chrome, then `git fetch && git reset --soft origin/main` to realign. Never handle tokens or passwords.
 
 ## Tooling on this Mac
 python3 (stdlib only, no PIL) and git. There is no node/npm/brew/gh and no full Xcode. Keep the app build-free: plain HTML/CSS/JS, no frameworks, no CDNs except Google Fonts (cached offline by the service worker).

@@ -31,13 +31,18 @@ python3 -m http.server 8766 --bind 127.0.0.1 --directory "$HOME/Desktop/PEOPLES 
 Then open http://127.0.0.1:8766/app/ (the tests are at http://127.0.0.1:8766/tests/test.html). On first run on the Mac, the app imports `backups/sixty-strong-import.json` automatically. On the published site that file doesn't exist; use Progress → Restore instead.
 
 ## Publish (GitHub Pages)
-Status: **not published yet.** The GitHub account is `thepoeplesman`. The first version is committed locally; the GitHub connector wasn't available in Claude Code, so Darryl publishes it once with GitHub Desktop. Steps:
-1. Install GitHub Desktop (desktop.github.com) and sign in as `thepoeplesman`.
-2. **File → Add Local Repository** → choose `~/Desktop/PEOPLES AI TWIN/Personal/Sixty Strong App` → **Publish repository**. Keep the name `sixty-strong` and **untick "Keep this code private"**. Public is fine: no workout data is ever in the repo (`backups/` and `source/data-export/` are git-ignored), and the free plan needs a public repo for Pages.
-3. On github.com: repo → **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `(root)`** → Save.
-4. The app will be at **https://thepoeplesman.github.io/sixty-strong/app/** (GitHub account `thepoeplesman`). Open that in Safari on the iPhone → Share → Add to Home Screen.
+**Published 2026-09-28** at **https://thepoeplesman.github.io/sixty-strong/app/**
+- Repo: https://github.com/thepoeplesman/sixty-strong (public; contains no workout or health data).
+- Pages: deploys from `main`, `/ (root)`. The site root redirects to `app/`.
+- On the iPhone: open the address in **Safari** → Share → **Add to Home Screen** → then Progress → Restore with `backups/sixty-strong-import.json`.
 
-**Updating later:** change the files, bump `CACHE` in `app/sw.js` (and `APP_VERSION` in `app/app.js`), then commit and push. Phones show an "Update ready" banner; tapping Reload switches to the new version. Their data is kept.
+**Updating later:**
+1. Change the files. Bump `CACHE` in `app/sw.js` and `APP_VERSION` in `app/app.js`.
+2. Commit locally.
+3. Get the change onto GitHub. There's no command-line GitHub login on this Mac, so either:
+   - Claude uploads the changed files through the GitHub website in Darryl's signed-in Chrome, then runs `git fetch` and `git reset --soft origin/main` so the local copy matches again; or
+   - GitHub Desktop pushes it.
+4. Phones show an "Update ready" banner; tapping Reload switches to the new version. Their data is kept.
 
 ## Backup and data safety
 - **Health data is never in the code or the repo.** It exists in two places only: the private `backups/` import file on the Mac/iCloud, and the phone's own storage.
